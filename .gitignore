@@ -1,0 +1,12 @@
+/node_modules
+
+.env
+
+/tmp/**/**.json
+/tmp/**/**.jpg
+/tmp/**/**.jpeg
+/tmp/**/**.png
+
+**copy.js
+**.rar
+**.txt

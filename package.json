@@ -1,0 +1,24 @@
+{
+  "name": "yt",
+  "version": "1.0.0",
+  "description": "scrape youtube subscriptions",
+  "main": "src/index.js",
+  "type": "module",
+  "target": "node",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "chalk": "^4.1.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "imgur": "^1.0.2",
+    "playwright": "^1.12.3",
+    "playwright-firefox": "^1.12.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/api.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
