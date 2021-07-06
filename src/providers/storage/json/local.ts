@@ -1,13 +1,14 @@
 import { readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import { StoreJsonParams, LoadJsonParams } from './debug'
 
 const JSON_PATH = path.join('tmp', 'json_data');
 
 const today = new Date();
 const date_time = today.toISOString().substring(0, 19).replace(/:/g, '-').replace('T', '_');
 
-const storeJson = ({ data, fileName }) => {
+const storeJson = ({ data, fileName }: StoreJsonParams) => {
   const fileNameDetailed = fileName !== 'state'
     ? path.join(JSON_PATH, `${process.env.USER}_${fileName}_${date_time}.json`)
     : path.join(JSON_PATH, `${process.env.USER}_${fileName}.json`);
@@ -24,7 +25,7 @@ const storeJson = ({ data, fileName }) => {
   }
 };
 
-const loadJson = async ({ fileName }) => {
+const loadJson = async ({ fileName }: LoadJsonParams) => {
   const fileNameDetailed = fileName !== 'state'
     ? path.join(JSON_PATH, `${process.env.USER}_${fileName}_${date_time}.json`)
     : path.join(JSON_PATH, `${process.env.USER}_${fileName}.json`);

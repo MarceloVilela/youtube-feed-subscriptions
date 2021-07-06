@@ -1,6 +1,11 @@
 import chalk from "chalk";
 
-const storeImage = ({ base64, fileName }) => {
+export interface StoreImageParams {
+  base64: string;
+  fileName: string;
+}
+
+const storeImage = ({ base64, fileName }: StoreImageParams) => {
   console.log(chalk.green('storeImage-debug'));
 
   console.table([

@@ -1,8 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 
-import { youtubeScrape } from './index.js';
-import { getStoreImage, getStoreJson, getLoadJson } from './providers/storage/index.js'
+import { youtubeScrape } from './main';
+import { getStoreImage, getStoreJson, getLoadJson } from './providers/storage';
 import chalk from 'chalk';
 
 dotenv.config();
@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 const browserOptions = { args: ["--no-sandbox"] };
 
-app.get('/feed/subscriptions', async (request, response) => {
+app.get('/feed/subscriptions', async (request: Request, response: Response) => {
   try {
     console.log(chalk.bgGreen('route[begin] /feed/subscriptions'));
 
@@ -29,7 +29,7 @@ app.get('/feed/subscriptions', async (request, response) => {
     });
 
     if (auth_method === 'user-pass') {
-      const page = await youtubeScrape.loginWhitUserPass();
+      await youtubeScrape.loginWhitUserPass();
     }
 
     data = await youtubeScrape.feedSubscriptions();
@@ -44,7 +44,7 @@ app.get('/feed/subscriptions', async (request, response) => {
 
 });
 
-app.get('/feed/home', async (request, response) => {
+app.get('/feed/home', async (request: Request, response: Response) => {
   try {
     console.log(chalk.bgGreen('route[begin] /feed/home'));
 

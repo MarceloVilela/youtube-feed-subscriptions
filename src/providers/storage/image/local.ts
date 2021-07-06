@@ -1,15 +1,16 @@
 import path from 'path';
 import { writeFileSync } from 'fs';
 import chalk from 'chalk';
+import { StoreImageParams } from './debug';
 
 const SCREEN_PATH = path.join('tmp', 'screenshot');
 
 const today = new Date();
 const date_time = today.toISOString().substring(0, 19).replace(/:/g, '-').replace('T', '_');
 
-const format = base64 => base64.replace(/^data:image\/\w+;base64,/, '');
+const format = (base64: string) => base64.replace(/^data:image\/\w+;base64,/, '');
 
-const storeImage = ({ base64, fileName }) => {
+const storeImage = ({ base64, fileName }: StoreImageParams) => {
   try {
     writeFileSync(
       path.join(SCREEN_PATH, `${process.env.USER}_${fileName}_${date_time}.jpg`),

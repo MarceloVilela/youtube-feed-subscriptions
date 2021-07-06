@@ -7,6 +7,8 @@
 /tmp/**/**.jpeg
 /tmp/**/**.png
 
+/dist
+
 **copy.js
 **.rar
 **.txt

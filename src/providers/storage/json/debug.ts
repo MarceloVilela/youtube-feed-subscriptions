@@ -1,6 +1,16 @@
 import chalk from "chalk";
 
-const storeJson = async ({ data, fileName }) => {
+export interface StoreJsonParams {
+  data: object;
+  fileName: string;
+}
+
+export interface LoadJsonParams {
+  data: object;
+  fileName: string;
+}
+
+const storeJson = async ({ data, fileName }: StoreJsonParams) => {
   console.log(chalk.green('storeJson-debug'));
 
   console.table([
@@ -11,7 +21,7 @@ const storeJson = async ({ data, fileName }) => {
   console.log('\n');
 }
 
-const loadJson = async ({ fileName }) => {
+const loadJson = async ({ fileName }: LoadJsonParams) => {
   console.log(chalk.green('loadJson-debug'));
 
   console.table([

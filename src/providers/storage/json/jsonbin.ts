@@ -1,11 +1,22 @@
 import axios from 'axios';
 import chalk from 'chalk';
+import { StoreJsonParams, LoadJsonParams } from './debug';
 
-const fileNameId = {
-  'state': process.env.JSONBIN_ID_STATE,
-  'feed-home': process.env.JSONBIN_ID_HOME,
-  'feed-subs': process.env.JSONBIN_ID_SUBS,
-};
+const getId = (fileName = '') => {
+  let id = '';
+  switch (fileName) {
+    case 'state': id = String(process.env.JSONBIN_ID_STATE);
+      break;
+    case 'feed-home': id = String(process.env.JSONBIN_ID_HOME);
+      break;
+    case 'feed-subs': id = String(process.env.JSONBIN_ID_SUBS);
+      break;
+    default: id = '';
+      break;
+  }
+
+  return id;
+}
 
 const headers = {
   'Content-Type': 'application/json',
@@ -20,8 +31,8 @@ const jsonbin = axios.create({
   headers
 });
 
-const storeJson = async ({ data, fileName }) => {
-  const id = fileNameId[fileName] ? fileNameId[fileName] : '';
+const storeJson = async ({ data, fileName }: StoreJsonParams) => {
+  const id = getId(fileName);
 
   try {
     await jsonbin.put(id, data);
@@ -32,15 +43,15 @@ const storeJson = async ({ data, fileName }) => {
   }
 }
 
-const loadJson = async ({ fileName }) => {
-  const id = fileNameId[fileName] ? fileNameId[fileName] : '';
+const loadJson = async ({ fileName }: LoadJsonParams) => {
+  const id = getId(fileName);
 
   try {
     const { data } = await jsonbin.get(id);
     const { record } = data;
 
     console.log(chalk.green('💾 The file has been loaded!' + '\n'));
-    
+
     return record;
   } catch (error) {
     console.log(chalk.red('💾 Error on load file!' + '\n'));
