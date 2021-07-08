@@ -6,7 +6,6 @@ export interface StoreJsonParams {
 }
 
 export interface LoadJsonParams {
-  data: object;
   fileName: string;
 }
 

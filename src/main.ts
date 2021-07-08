@@ -1,4 +1,4 @@
-import { firefox, Page, LaunchOptions, PageScreenshotOptions } from 'playwright-firefox';
+import { firefox, Page, LaunchOptions, PageScreenshotOptions, Browser } from 'playwright-firefox';
 import chalk from 'chalk';
 import dotenv from 'dotenv';
 
@@ -77,6 +77,7 @@ type InitializeParams = {
 
 class YoutubeScrape {
   page = {} as Page;
+  browser = {} as Browser;
   storeJson: ({ }: StoreJsonParams) => void;
   loadJson: ({ }: LoadJsonParams) => void;
   storeImage: ({ }: StoreImageParams) => void;
@@ -85,6 +86,7 @@ class YoutubeScrape {
     console.log(chalk.cyan('initialize'));
 
     const browser = await firefox.launch(browserOptions);
+    this.browser = browser;
 
     const page = await browser.newPage({
       storageState,
@@ -286,6 +288,10 @@ class YoutubeScrape {
 
     return videos;
   };
+
+  end = async () => {
+    await this.browser.close();
+  }
 
   storeScreenshot = async ({ page, fileName = 'feed-home', options }: StoreScreenshotParams) => {
     const buffer = await page.screenshot(
