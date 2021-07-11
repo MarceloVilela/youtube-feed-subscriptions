@@ -29,8 +29,9 @@ app.get('/feed/subscriptions', async (request: Request, response: Response) => {
 
     width = (widthQuery >= 768 && widthQuery <= 3840) ? widthQuery : width;
     height = (heightQuery >= 768 && heightQuery <= 3840) ? heightQuery : height;
-    iterationNum = (iterationQuery >= 10 && heightQuery <= 50) ? iterationQuery : iterationNum;
+    iterationNum = (iterationQuery >= 10 && iterationQuery <= 50) ? iterationQuery : iterationNum;
     const state = auth_method === 'stored' ? await getLoadJson()({ fileName: 'state' }) : '';
+    
     await youtubeScrape.initialize({
       browserOptions,
       width,
@@ -74,7 +75,7 @@ app.get('/feed/home', async (request: Request, response: Response) => {
 
     width = (widthQuery >= 768 && widthQuery <= 3840) ? widthQuery : width;
     height = (heightQuery >= 768 && heightQuery <= 3840) ? heightQuery : height;
-    iterationNum = (iterationQuery >= 10 && heightQuery <= 50) ? iterationQuery : iterationNum;
+    iterationNum = (iterationQuery >= 10 && iterationQuery <= 50) ? iterationQuery : iterationNum;
     const state = auth_method === 'stored' ? await getLoadJson()({ fileName: 'state' }) : {};
     await youtubeScrape.initialize({
       browserOptions,
