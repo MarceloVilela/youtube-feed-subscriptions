@@ -6,7 +6,7 @@ dotenv.config();
 
 const USER = String(process.env.USER);
 const PASS = String(process.env.PASS);
-const ITERATION_NUM = Number(process.env.ITERATION_NUM);
+//const ITERATION_NUM = Number(process.env.ITERATION_NUM);
 const TIMEOUT_SHORT = Number(process.env.TIMEOUT_SHORT);
 const TIMEOUT_LONG = Number(process.env.TIMEOUT_LONG);
 
@@ -73,6 +73,9 @@ type InitializeParams = {
   browserOptions: LaunchOptions;
   storageState: StorageState;
   fileOperations: FileOperations;
+  width: number;
+  height: number;
+  iterationNum: number;
 }
 
 class YoutubeScrape {
@@ -81,8 +84,9 @@ class YoutubeScrape {
   storeJson: ({ }: StoreJsonParams) => void;
   loadJson: ({ }: LoadJsonParams) => void;
   storeImage: ({ }: StoreImageParams) => void;
+  iterationNum = 10;
 
-  initialize = async ({ browserOptions, storageState, fileOperations }: InitializeParams) => {
+  initialize = async ({ browserOptions, storageState, fileOperations, width, height, iterationNum }: InitializeParams) => {
     console.log(chalk.cyan('initialize'));
 
     const browser = await firefox.launch(browserOptions);
@@ -94,8 +98,8 @@ class YoutubeScrape {
       colorScheme: 'dark',
 
       viewport: {
-        width: 1200,
-        height: 1000,
+        width,
+        height
       },
     });
 
@@ -103,6 +107,7 @@ class YoutubeScrape {
     this.storeJson = fileOperations.storeJson;
     this.loadJson = fileOperations.loadJson;
     this.storeImage = fileOperations.storeImage;
+    this.iterationNum = iterationNum;
 
     console.log(chalk.cyan('initialize - storageState.origins'));
     console.table(storageState && storageState.origins ? storageState.origins : '');
@@ -208,7 +213,7 @@ class YoutubeScrape {
 
       //Decides how many time it loops through, definetely a better way to write this.
       iteration++
-      if (iteration == ITERATION_NUM) {
+      if (iteration == this.iterationNum) {
         iteration = 0;
         break;
       }
@@ -278,7 +283,7 @@ class YoutubeScrape {
 
       //Decides how many time it loops through, definetely a better way to write this.
       iteration++
-      if (iteration == ITERATION_NUM) {
+      if (iteration == this.iterationNum) {
         iteration = 0;
         break;
       }
