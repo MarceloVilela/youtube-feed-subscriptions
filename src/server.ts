@@ -116,6 +116,51 @@ app.get('/feed/home', async (request: Request, response: Response) => {
 
 });
 
+app.get('/feed/channel', async (request: Request, response: Response) => {
+  try {
+    console.log(chalk.bgGreen('route[begin] /feed/channel'));
+
+    const { auth_method, url } = request.query;
+    const widthQuery = Number(request.query.width);
+    const heightQuery = Number(request.query.height);
+    const iterationQuery = Number(request.query.iteration);
+    let data = {};
+
+    width = (widthQuery >= 768 && widthQuery <= 3840) ? widthQuery : width;
+    height = (heightQuery >= 768 && heightQuery <= 3840) ? heightQuery : height;
+    iterationNum = (iterationQuery >= 10 && iterationQuery <= 50) ? iterationQuery : iterationNum;
+    const state = auth_method === 'stored' ? await getLoadJson()({ fileName: 'state' }) : {};
+    await youtubeScrape.initialize({
+      browserOptions,
+      width,
+      height,
+      storageState: state,
+      fileOperations: {
+        storeJson: getStoreJson(),
+        storeImage: getStoreImage(),
+        loadJson: getLoadJson(),
+      },
+      iterationNum
+    });
+
+    if (auth_method === 'user-pass') {
+      await youtubeScrape.loginWhitUserPass();
+    }
+
+    data = await youtubeScrape.feedChannel(url);
+    await youtubeScrape.end();
+
+    console.log(chalk.bgGreen('route[success] /feed/channel'));
+    return response.json(data);
+  } catch (error) {
+    console.log(chalk.bgRed('route[error] /feed/channel'));
+    console.log(error);
+    await youtubeScrape.end();
+    return response.status(500).json({ error: error.message });
+  }
+
+});
+
 app.get('/', async (request: Request, response: Response) => {
   console.log(chalk.bgGreen('route /'));
 
@@ -124,6 +169,7 @@ app.get('/', async (request: Request, response: Response) => {
     routes: [
       { '/feed/subscriptions': 'retrieve your own Youtube feed subscriptions (https://www.youtube.com/feed/subscriptions)' },
       { '/feed/home': 'retrieve your own Youtube homepage results (https://www.youtube.com)' },
+      { '/feed/channel': 'Retrieve results from a youtube channel (https://www.youtube.com/c/VEVO)' }
     ]
   })
 });

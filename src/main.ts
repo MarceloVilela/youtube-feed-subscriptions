@@ -294,6 +294,75 @@ class YoutubeScrape {
     return videos;
   };
 
+  feedChannel = async (url: string): Promise<Video[]> => {
+    console.log(chalk.cyan('feedChannel'));
+
+    const page = this.page;
+
+    const accountName = USER;
+
+    await page.goto(`${url}/videos`);
+    
+    await page.waitForSelector("#contents");
+
+    console.log(chalk.cyan("🔨 Scraper Starting for : " + accountName + " ——— waiting " + TIMEOUT_LONG + " miliseconds " + '\n'));
+    await page.waitForTimeout(TIMEOUT_LONG);
+
+    //——Making screenshot of each file
+
+    //make a photo based on the iteraction count 
+    await this.storeScreenshot({ page, fileName: 'feed-channels' });
+
+    //$$ works exactly as a document.querySelectorAll() would in the browser console
+    let videoArray = await page.$$('ytd-grid-video-renderer');
+
+    let videos = <Video[]>[];
+    let iteration = 0;
+
+    for (let videoElement of videoArray) {
+      var video = <Video>{};
+      let youtube_url = "https://www.youtube.com";
+
+      try {
+        //.getAttribute gets elements within the class in HTML
+        video.title = await videoElement.$eval('#video-title', element => (element as HTMLParagraphElement).innerText);
+        video.url = await videoElement.$eval('h3 a', element => element.getAttribute('href'));
+        video.url = `${youtube_url}${video.url}`;
+        video.channel_name = await page.$eval('#channel-header-container #channel-name', element => (element as HTMLParagraphElement).innerText);
+        video.channel_url = url;
+        video.channel_icon = await page.$eval('#channel-header-container #avatar [src]', element => element.getAttribute('src'));
+        video.thumbnail = await videoElement.$eval('#thumbnail #img', element => element.getAttribute('src'));
+        video.view_num = await videoElement.$eval('#metadata-line span', element => (element as HTMLParagraphElement).innerText);
+        video.date = await videoElement.$eval('#metadata-line span:nth-of-type(2)', element => (element as HTMLParagraphElement).innerText);
+
+        if (video.thumbnail) {
+          videos.push(video);
+        } else {
+          console.log(`‼️ Error occured during scraping. ${video.title} don't have thumb`);
+          continue;
+        }
+
+      }
+      catch (e) {
+        console.log("‼️ Error occured during scraping" + e);
+        continue;
+      }
+
+      console.log(chalk.cyan(`Listed video: ${video.title}`));
+
+      //Decides how many time it loops through, definetely a better way to write this.
+      iteration++
+      if (iteration == this.iterationNum) {
+        iteration = 0;
+        break;
+      }
+    }
+
+    this.storeJson({ fileName: 'feed-channel', data: videos });
+
+    return videos;
+  };
+
   end = async () => {
     await this.browser.close();
   }
