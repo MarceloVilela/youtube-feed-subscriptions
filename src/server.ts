@@ -1,10 +1,12 @@
 import express, { Request, Response } from 'express';
+import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import chalk from 'chalk';
 
 import { youtubeScrape } from './main';
 import { getStoreImage, getStoreJson, getLoadJson } from './providers/storage';
-import chalk from 'chalk';
+import swaggerFile from '../swagger_output.json';
 
 dotenv.config();
 
@@ -15,6 +17,12 @@ const browserOptions = { args: ["--no-sandbox"] };
 let width = 1200;
 let height = 1000;
 let iterationNum = 10;
+
+app.use(
+  '/doc',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerFile, undefined, { docExpansion: "none", persistAuthorization: true })
+)
 
 app.get('/feed/subscriptions', async (request: Request, response: Response) => {
   try {
@@ -31,7 +39,7 @@ app.get('/feed/subscriptions', async (request: Request, response: Response) => {
     height = (heightQuery >= 768 && heightQuery <= 3840) ? heightQuery : height;
     iterationNum = (iterationQuery >= 10 && iterationQuery <= 50) ? iterationQuery : iterationNum;
     const state = auth_method === 'stored' ? await getLoadJson()({ fileName: 'state' }) : '';
-    
+
     await youtubeScrape.initialize({
       browserOptions,
       width,

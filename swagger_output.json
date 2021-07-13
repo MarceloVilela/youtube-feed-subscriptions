@@ -1,0 +1,244 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Feed",
+    "description": "Retrieve your own Youtube recommendation results"
+  },
+  "host": "feed-yt.herokuapp.com",
+  "basePath": "",
+  "tags": [],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "authorization",
+      "description": "Standard Authorization header using the Bearer scheme. Example: \"bearer {token}\"",
+      "token": "aaa"
+    }
+  },
+  "consumes": [],
+  "produces": [],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [],
+        "summary": "Get info about app",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AppInfo"
+            },
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/feed/subscriptions": {
+      "get": {
+        "tags": [
+          "Feed Subscriptions"
+        ],
+        "summary": "Retrieve your own Youtube feed subscriptions (https://www.youtube.com/feed/subscriptions)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "auth_method",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "stored"
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "type": "string",
+            "default": "1200"
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "type": "string",
+            "default": "1000"
+          },
+          {
+            "name": "iteration",
+            "in": "query",
+            "type": "string",
+            "default": "10"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ArrayOfVideo"
+            },
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/feed/home": {
+      "get": {
+        "tags": [
+          "Feed Home"
+        ],
+        "summary": "Retrieve your own Youtube homepage results (https://www.youtube.com)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "auth_method",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "default": "stored"
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "type": "string",
+            "default": "1200"
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "type": "string",
+            "default": "1000"
+          },
+          {
+            "name": "iteration",
+            "in": "query",
+            "type": "string",
+            "default": "10"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ArrayOfVideo"
+            },
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/feed/channel": {
+      "get": {
+        "tags": [
+          "Feed Channel"
+        ],
+        "summary": "Retrieve results from a youtube channel (https://www.youtube.com/c/VEVO)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "auth_method",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "default": "stored"
+          },
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "width",
+            "in": "query",
+            "type": "string",
+            "default": "1200"
+          },
+          {
+            "name": "height",
+            "in": "query",
+            "type": "string",
+            "default": "1000"
+          },
+          {
+            "name": "iteration",
+            "in": "query",
+            "type": "string",
+            "default": "10"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ArrayOfVideo"
+            },
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AppInfo": {
+      "type": "object",
+      "properties": {
+        "appName": {
+          "type": "string",
+          "example": "youtube-feed-subscriptions"
+        },
+        "routes": {
+          "type": "array",
+          "example": [
+            {
+              "/feed/subscriptions": "Retrieve your own Youtube feed subscriptions (https://www.youtube.com/feed/subscriptions)"
+            },
+            {
+              "/feed/home": "Retrieve your own Youtube homepage results (https://www.youtube.com)"
+            }
+          ]
+        }
+      }
+    },
+    "ArrayOfVideo": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Manjaro Linux, ta mais leve!"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://www.youtube.com/watch?v=Stz8LW3YCT4"
+          },
+          "channel_name": {
+            "type": "string",
+            "example": "SLACKJEFF"
+          },
+          "channel_url": {
+            "type": "string",
+            "example": "https://www.youtube.com/channel/UClz3DneoYlccluy4hBlx86Q"
+          },
+          "channel_icon": {
+            "type": "string",
+            "example": "https://yt3.ggpht.com/cmj9kMz3ODEx8eA2rrjvYxQ-Erw453UQtUIjsi6BYe__x5I6yAniojaKzqsyBbWI414i-LWZxA=s88-c-k-c0x00ffffff-no-rj"
+          },
+          "thumbnail": {
+            "type": "string",
+            "example": "https://i.ytimg.com/vi/Stz8LW3YCT4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBo5jb9G64pfZdEEWvTFnAppHMyBw"
+          },
+          "view_num": {
+            "type": "string",
+            "example": "1 mil visualizações"
+          },
+          "date": {
+            "type": "string",
+            "example": "Transmitido há 1 semana"
+          }
+        }
+      }
+    }
+  }
+}
