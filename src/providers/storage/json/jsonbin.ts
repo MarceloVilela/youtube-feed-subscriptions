@@ -39,9 +39,9 @@ const storeJson = async ({ data, fileName }: StoreJsonParams) => {
   try {
     await jsonbin.put(id, data);
 
-    console.log(chalk.green('💾 The file has been saved!' + '\n'));
+    console.log(chalk.green(`💾 The file (${fileName}|${id}) has been saved!` + '\n'));
   } catch (error) {
-    console.log(chalk.red('💾 Error on save file!' + '\n'));
+    console.log(chalk.red(`💾 Error on save file (${fileName}|${id})!` + '\n'));
   }
 }
 

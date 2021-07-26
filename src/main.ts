@@ -192,10 +192,9 @@ class YoutubeScrape {
         video.channel_url = `${youtube_url}${video.channel_url}`;
         //video.channel_icon = await videoElement.$eval('a[class="yt-simple-endpoint style-scope ytd-rich-grid-video-renderer"] img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
         video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
-        //video.viewnum = await videoElement.$eval('span[class="style-scope ytd-video-meta-block"]', element => element.innerText);
-        //video.date = await videoElement.$eval('div[class="style-scope ytd-video-meta-block"]', element => element.innerText);
-        //video.date = video.date.split("\n")[2];
-
+        video.view_num = await videoElement.$eval('#metadata-line span', element => (element as HTMLParagraphElement).innerText);
+        video.date = await videoElement.$eval('#metadata-line span+span', element => (element as HTMLParagraphElement).innerText);
+        
         if (video.thumbnail) {
           videos.push(video);
         } else {
@@ -262,10 +261,9 @@ class YoutubeScrape {
         video.channel_url = `${youtube_url}${video.channel_url}`;
         video.channel_icon = await videoElement.$eval('a[class*="ytd-rich-grid-media"] img[class*="yt-img-shadow"]', element => element.getAttribute('src'));
         video.thumbnail = await videoElement.$eval('img[class*="yt-img-shadow"]', element => element.getAttribute('src'));
-        video.view_num = await videoElement.$eval('span[class*="ytd-video-meta-block"]', element => (element as HTMLParagraphElement).innerText);
-        video.date = await videoElement.$eval('div[class*="ytd-video-meta-block"]', element => (element as HTMLParagraphElement).innerText);
-        video.date = video.date.split("\n")[2];
-
+        video.view_num = await videoElement.$eval('#metadata-line span', element => (element as HTMLParagraphElement).innerText);
+        video.date = await videoElement.$eval('#metadata-line span+span', element => (element as HTMLParagraphElement).innerText);
+        
         if (video.thumbnail) {
           videos.push(video);
         } else {
