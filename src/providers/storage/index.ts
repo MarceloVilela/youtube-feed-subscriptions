@@ -27,7 +27,7 @@ const storeImage = {
 
 const getStoreImage = () => {
   switch (process.env.STORE_IMG) {
-    case 'jsonbin':
+    case 'imgur':
       return storeImage['imgur'];
     case 'local':
       return storeImage['local'];

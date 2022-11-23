@@ -54,7 +54,8 @@ app.get('/feed/subscriptions', async (request: Request, response: Response) => {
     });
 
     if (auth_method === 'user-pass') {
-      await youtubeScrape.loginWhitUserPass();
+      const state = await youtubeScrape.loginWhitUserPass();
+      //return response.json(state);
     }
 
     data = await youtubeScrape.feedSubscriptions();

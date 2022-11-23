@@ -135,10 +135,11 @@ class YoutubeScrape {
 
     //Type in the password, wait 2 seconds since form take while to load
     console.log('Typing in the password...');
-    await page.waitForTimeout(TIMEOUT_LONG);
+    await page.waitForTimeout(TIMEOUT_SHORT);
     await this.storeScreenshot({ page, fileName: 'login-type-pass' });
     await page.waitForSelector('#password');
-    await page.type('#password', PASS, { delay: 80 });
+    // await page.type('#password', PASS, { delay: 80 });
+    await page.type('#password input', PASS, { delay: 80 });
 
     //Sending the Password
     await page.waitForTimeout(TIMEOUT_SHORT);
@@ -149,8 +150,11 @@ class YoutubeScrape {
 
     await page.waitForTimeout(TIMEOUT_LONG);
 
+    await this.storeScreenshot({ page, fileName: 'LOGIN------OK' });
+
     const state = await page.context().storageState();
     this.storeJson({ fileName: 'state', data: state });
+    return state;
   };
 
   feedSubscriptions = async (): Promise<Video[]> => {
@@ -191,7 +195,8 @@ class YoutubeScrape {
         video.channel_url = await videoElement.$eval('a[class="yt-simple-endpoint style-scope yt-formatted-string"]', element => element.getAttribute('href'));
         video.channel_url = `${youtube_url}${video.channel_url}`;
         //video.channel_icon = await videoElement.$eval('a[class="yt-simple-endpoint style-scope ytd-rich-grid-video-renderer"] img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
-        video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
+        //video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
+        video.thumbnail = await videoElement.$eval('img[src*="i.ytimg.com"]', element => element.getAttribute('src'));
         video.view_num = await videoElement.$eval('#metadata-line span', element => (element as HTMLParagraphElement).innerText);
         video.date = await videoElement.$eval('#metadata-line span+span', element => (element as HTMLParagraphElement).innerText);
         
