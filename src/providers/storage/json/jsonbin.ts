@@ -1,36 +1,41 @@
-import axios from 'axios';
-import chalk from 'chalk';
-import { StoreJsonParams, LoadJsonParams } from './debug';
+import axios from "axios";
+import chalk from "chalk";
+import { StoreJsonParams, LoadJsonParams } from "./debug";
 
-const getId = (fileName = '') => {
-  let id = '';
+const getId = (fileName = "") => {
+  let id = "";
   switch (fileName) {
-    case 'state': id = String(process.env.JSONBIN_ID_STATE);
+    case "state":
+      id = String(process.env.JSONBIN_ID_STATE);
       break;
-    case 'feed-home': id = String(process.env.JSONBIN_ID_HOME);
+    case "feed-home":
+      id = String(process.env.JSONBIN_ID_HOME);
       break;
-    case 'feed-subs': id = String(process.env.JSONBIN_ID_SUBS);
+    case "feed-subs":
+      id = String(process.env.JSONBIN_ID_SUBS);
       break;
-    case 'feed-channel': id = String(process.env.JSONBIN_ID_CHANNEL);
+    case "feed-channel":
+      id = String(process.env.JSONBIN_ID_CHANNEL);
       break;
-    default: id = '';
+    default:
+      id = "";
       break;
   }
 
   return id;
-}
+};
 
 const headers = {
-  'Content-Type': 'application/json',
-  'X-Master-Key': process.env.JSONBIN_API_KEY,
+  "Content-Type": "application/json",
+  "X-Master-Key": process.env.JSONBIN_API_KEY,
 };
 
 /**
  * https://jsonbin.io/api-reference/bins/get-started
  */
 const jsonbin = axios.create({
-  baseURL: 'https://api.jsonbin.io/v3/b/',
-  headers
+  baseURL: "https://api.jsonbin.io/v3/b/",
+  headers,
 });
 
 const storeJson = async ({ data, fileName }: StoreJsonParams) => {
@@ -39,11 +44,13 @@ const storeJson = async ({ data, fileName }: StoreJsonParams) => {
   try {
     await jsonbin.put(id, data);
 
-    console.log(chalk.green(`💾 The file (${fileName}|${id}) has been saved!` + '\n'));
+    console.log(chalk.green(`💾 The file (${fileName}|${id}) has been saved!`));
   } catch (error) {
-    console.log(chalk.red(`💾 Error on save file (${fileName}|${id})!` + '\n'));
+    console.log(chalk.red(`💾 Error on save file (${fileName}|${id})!`));
+    // @ts-ignore
+    console.log(error.message);
   }
-}
+};
 
 const loadJson = async ({ fileName }: LoadJsonParams) => {
   const id = getId(fileName);
@@ -52,13 +59,14 @@ const loadJson = async ({ fileName }: LoadJsonParams) => {
     const { data } = await jsonbin.get(id);
     const { record } = data;
 
-    console.log(chalk.green('💾 The file has been loaded!' + '\n'));
+    console.log(
+      chalk.green(`💾 The file (${fileName}|${id}) has been loaded!`),
+    );
 
     return record;
   } catch (error) {
-    console.log(chalk.red('💾 Error on load file!' + '\n'));
+    console.log(chalk.red(`💾 Error on load file (${fileName}|${id})!`));
   }
-
-}
+};
 
 export { storeJson, loadJson };
