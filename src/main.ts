@@ -1,10 +1,4 @@
-import {
-  firefox,
-  Page,
-  LaunchOptions,
-  PageScreenshotOptions,
-  Browser,
-} from "playwright-firefox";
+import { firefox, Page, LaunchOptions, PageScreenshotOptions, Browser } from "playwright-firefox";
 import chalk from "chalk";
 // @ts-ignore
 import dotenv from "dotenv";
@@ -107,8 +101,7 @@ class YoutubeScrape {
     this.browser = browser;
 
     const page = await browser.newPage({
-      storageState:
-        typeof storageState === "string" ? storageState : (storageState as any),
+      storageState: typeof storageState === "string" ? storageState : (storageState as any),
 
       colorScheme: "dark",
 
@@ -194,15 +187,15 @@ class YoutubeScrape {
           " ——— waiting " +
           TIMEOUT_LONG +
           " miliseconds " +
-          "\n",
-      ),
+          "\n"
+      )
     );
-    await page.waitForTimeout(TIMEOUT_LONG);
+    //await page.waitForTimeout(TIMEOUT_LONG);
 
     //——Making screenshot of each file
 
     //make a photo based on the iteraction count
-    await this.storeScreenshot({ page, fileName: "feed-subs" });
+    this.storeScreenshot({ page, fileName: "feed-subs" });
 
     //$$ works exactly as a document.querySelectorAll() would in the browser console
     let videoArray = await page.$$("#contents #content");
@@ -219,34 +212,34 @@ class YoutubeScrape {
         //.getAttribute gets elements within the class in HTML
         video.title = await videoElement.$eval(
           "h3 span",
-          (element) => (element as HTMLSpanElement).innerText,
+          (element) => (element as HTMLSpanElement).innerText
         );
-        video.url = await videoElement.$eval("h3 a", (element) =>
-          element.getAttribute("href"),
-        );
+        video.url = await videoElement.$eval("h3 a", (element) => element.getAttribute("href"));
         video.url = `${youtube_url}${video.url}`;
         video.channel_name = await videoElement.$eval(
           ".ytAttributedStringHost a",
-          (element) => (element as HTMLAnchorElement).innerText,
+          (element) => (element as HTMLAnchorElement).innerText
         );
-        video.channel_url = await videoElement.$eval(
-          ".ytAttributedStringHost a",
-          (element) => element.getAttribute("href"),
+        video.channel_url = await videoElement.$eval(".ytAttributedStringHost a", (element) =>
+          element.getAttribute("href")
         );
         video.channel_url = `${youtube_url}${video.channel_url}`;
         //video.channel_icon = await videoElement.$eval('a[class="yt-simple-endpoint style-scope ytd-rich-grid-video-renderer"] img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
         //video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
-        video.thumbnail = await videoElement.$eval(
-          'img[src*="i.ytimg.com"]',
-          (element) => element.getAttribute("src"),
-        );
+        try {
+          video.thumbnail = await videoElement.$eval('img[src*="i.ytimg.com"]', (element) =>
+            element.getAttribute("src")
+          );
+        } catch (error) {
+          video.thumbnail = `https://img.youtube.com/vi/${video.url.split("?v=").pop()}/hqdefault.jpg`;
+        }
         video.view_num = await videoElement.$eval(
           "yt-content-metadata-view-model span",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
         video.date = await videoElement.$eval(
           "yt-content-metadata-view-model span:nth-of-type(2)",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
 
         if (video.thumbnail) {
@@ -260,7 +253,7 @@ class YoutubeScrape {
         continue;
       }
 
-      console.log(chalk.cyan(`Listed video: ${video.title}`));
+      console.log(chalk.cyan(`Listed video[${iteration}]: ${video.title}`));
 
       //Decides how many time it loops through, definetely a better way to write this.
       iteration++;
@@ -292,15 +285,15 @@ class YoutubeScrape {
           " ——— waiting " +
           TIMEOUT_LONG +
           " miliseconds " +
-          "\n",
-      ),
+          "\n"
+      )
     );
-    await page.waitForTimeout(5000);
+    //await page.waitForTimeout(5000);
 
     //——Making screenshot of each file
 
     //make a photo based on the iteraction count
-    await this.storeScreenshot({ page, fileName: "feed-home" });
+    this.storeScreenshot({ page, fileName: "feed-home" });
 
     //$$ works exactly as a document.querySelectorAll() would in the browser console
     let videoArray = await page.$$("#contents .ytd-rich-grid-renderer");
@@ -316,42 +309,36 @@ class YoutubeScrape {
         //.getAttribute gets elements within the class in HTML
         video.title = await videoElement.$eval(
           "h3 span",
-          (element) => (element as HTMLSpanElement).innerText,
+          (element) => (element as HTMLSpanElement).innerText
         );
-        video.url = await videoElement.$eval("h3 a", (element) =>
-          element.getAttribute("href"),
-        );
+        video.url = await videoElement.$eval("h3 a", (element) => element.getAttribute("href"));
         video.url = `${youtube_url}${video.url}`;
         video.channel_name = await videoElement.$eval(
           ".ytAttributedStringHost a",
-          (element) => (element as HTMLAnchorElement).innerText,
+          (element) => (element as HTMLAnchorElement).innerText
         );
-        video.channel_url = await videoElement.$eval(
-          ".ytAttributedStringHost a",
-          (element) => element.getAttribute("href"),
+        video.channel_url = await videoElement.$eval(".ytAttributedStringHost a", (element) =>
+          element.getAttribute("href")
         );
         video.channel_url = `${youtube_url}${video.channel_url}`;
         //video.channel_icon = await videoElement.$eval('a[class="yt-simple-endpoint style-scope ytd-rich-grid-video-renderer"] img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
         //video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
-        video.thumbnail = await videoElement.$eval(
-          'img[src*="i.ytimg.com"]',
-          (element) => element.getAttribute("src"),
+        video.thumbnail = await videoElement.$eval('img[src*="i.ytimg.com"]', (element) =>
+          element.getAttribute("src")
         );
         video.view_num = await videoElement.$eval(
           "yt-content-metadata-view-model span",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
         video.date = await videoElement.$eval(
           "yt-content-metadata-view-model span:nth-of-type(2)",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
 
         if (video.thumbnail) {
           videos.push(video);
         } else {
-          console.log(
-            `‼️ Error occured during scraping. ${video.title} don't have thumb`,
-          );
+          console.log(`‼️ Error occured during scraping. ${video.title} don't have thumb`);
           continue;
         }
       } catch (e) {
@@ -392,8 +379,8 @@ class YoutubeScrape {
           " ——— waiting " +
           TIMEOUT_LONG +
           " miliseconds " +
-          "\n",
-      ),
+          "\n"
+      )
     );
     await page.waitForTimeout(TIMEOUT_LONG);
 
@@ -416,40 +403,35 @@ class YoutubeScrape {
         //.getAttribute gets elements within the class in HTML
         video.title = await videoElement.$eval(
           "h3 span",
-          (element) => (element as HTMLSpanElement).innerText,
+          (element) => (element as HTMLSpanElement).innerText
         );
-        video.url = await videoElement.$eval("h3 a", (element) =>
-          element.getAttribute("href"),
-        );
+        video.url = await videoElement.$eval("h3 a", (element) => element.getAttribute("href"));
         video.url = `${youtube_url}${video.url}`;
         video.channel_name = await page.$eval(
           ".ytPageHeaderViewModelContent h1",
-          (element) => (element as HTMLHeadingElement).innerText,
+          (element) => (element as HTMLHeadingElement).innerText
         );
         video.channel_url = url;
         video.channel_icon = await page.$eval(
           ".ytPageHeaderViewModelContent .ytSpecAvatarShapeAvatarSizeGiant [src]",
-          (element) => element.getAttribute("src"),
+          (element) => element.getAttribute("src")
         );
-        video.thumbnail = await videoElement.$eval(
-          "yt-thumbnail-view-model img",
-          (element) => element.getAttribute("src"),
+        video.thumbnail = await videoElement.$eval("yt-thumbnail-view-model img", (element) =>
+          element.getAttribute("src")
         );
         video.view_num = await videoElement.$eval(
           "yt-content-metadata-view-model span",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
         video.date = await videoElement.$eval(
           "yt-content-metadata-view-model span:nth-of-type(2)",
-          (element) => (element as HTMLParagraphElement).innerText,
+          (element) => (element as HTMLParagraphElement).innerText
         );
 
         if (video.thumbnail) {
           videos.push(video);
         } else {
-          console.log(
-            `‼️ Error occured during scraping. ${video.title} don't have thumb`,
-          );
+          console.log(`‼️ Error occured during scraping. ${video.title} don't have thumb`);
           continue;
         }
       } catch (e) {
@@ -476,11 +458,7 @@ class YoutubeScrape {
     await this.browser.close();
   };
 
-  storeScreenshot = async ({
-    page,
-    fileName = "feed-home",
-    options,
-  }: StoreScreenshotParams) => {
+  storeScreenshot = async ({ page, fileName = "feed-home", options }: StoreScreenshotParams) => {
     const buffer = await page
       .screenshot
       //options

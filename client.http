@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:3334
+
+# @name browser-screenshot
+GET {{baseUrl}}/page/screenshot?url=https://devfinder.vercel.app&y=80,900,1700&user=marcelovilelas
+
+###
+
+# @name browser-feed-channel
+GET {{baseUrl}}/feed/channel?height=3840&iteration=50&auth_method=user-pass
+
+###
+
+# @name browser-feed-channel-DevDoido
+GET {{baseUrl}}/feed/channel?url=https://www.youtube.com/@DevDoido&auth_method=stored&iteration=50&height=6000
+
+###
+
+# @name browser-feed-subscriptions
+GET {{baseUrl}}/feed/subscriptions?height=1920&iteration=50&auth_method=stored
+
+###
+
+# @name browser-feed-home
+GET {{baseUrl}}/feed/home?height=1920&iteration=50&auth_method=stored
+
+###

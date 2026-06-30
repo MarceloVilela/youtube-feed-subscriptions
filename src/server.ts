@@ -26,7 +26,7 @@ app.use(
   swaggerUi.setup(swaggerFile, undefined, {
     docExpansion: "none",
     persistAuthorization: true,
-  }),
+  })
 );
 
 app.get("/feed/subscriptions", async (request: Request, response: Response) => {
@@ -41,14 +41,8 @@ app.get("/feed/subscriptions", async (request: Request, response: Response) => {
 
     width = widthQuery >= 768 && widthQuery <= 3840 ? widthQuery : width;
     height = heightQuery >= 768 && heightQuery <= 3840 ? heightQuery : height;
-    iterationNum =
-      iterationQuery >= 10 && iterationQuery <= 100
-        ? iterationQuery
-        : iterationNum;
-    const state =
-      auth_method === "stored"
-        ? await getLoadJson()({ fileName: "state" })
-        : {};
+    iterationNum = iterationQuery >= 10 && iterationQuery <= 100 ? iterationQuery : iterationNum;
+    const state = auth_method === "stored" ? await getLoadJson()({ fileName: "state" }) : {};
 
     await youtubeScrape.initialize({
       browserOptions,
@@ -92,14 +86,8 @@ app.get("/feed/home", async (request: Request, response: Response) => {
 
     width = widthQuery >= 768 && widthQuery <= 3840 ? widthQuery : width;
     height = heightQuery >= 768 && heightQuery <= 3840 ? heightQuery : height;
-    iterationNum =
-      iterationQuery >= 10 && iterationQuery <= 100
-        ? iterationQuery
-        : iterationNum;
-    const state =
-      auth_method === "stored"
-        ? await getLoadJson()({ fileName: "state" })
-        : {};
+    iterationNum = iterationQuery >= 10 && iterationQuery <= 100 ? iterationQuery : iterationNum;
+    const state = auth_method === "stored" ? await getLoadJson()({ fileName: "state" }) : {};
     await youtubeScrape.initialize({
       browserOptions,
       width,
@@ -126,7 +114,7 @@ app.get("/feed/home", async (request: Request, response: Response) => {
     console.log(chalk.bgRed("route[error] /feed/home"));
     console.log(error);
     await youtubeScrape.end();
-    return response.status(500).json({ error: error.message });
+    return response.status(500).json({ error: JSON.stringify(error, null, 2) });
   }
 });
 
@@ -142,14 +130,8 @@ app.get("/feed/channel", async (request: Request, response: Response) => {
 
     width = widthQuery >= 768 && widthQuery <= 3840 ? widthQuery : width;
     height = heightQuery >= 768 && heightQuery <= 3840 ? heightQuery : height;
-    iterationNum =
-      iterationQuery >= 10 && iterationQuery <= 100
-        ? iterationQuery
-        : iterationNum;
-    const state =
-      auth_method === "stored"
-        ? await getLoadJson()({ fileName: "state" })
-        : {};
+    iterationNum = iterationQuery >= 10 && iterationQuery <= 100 ? iterationQuery : iterationNum;
+    const state = auth_method === "stored" ? await getLoadJson()({ fileName: "state" }) : {};
 
     await youtubeScrape.initialize({
       browserOptions,
@@ -192,12 +174,10 @@ app.get("/", async (request: Request, response: Response) => {
           "retrieve your own Youtube feed subscriptions (https://www.youtube.com/feed/subscriptions)",
       },
       {
-        "/feed/home":
-          "retrieve your own Youtube homepage results (https://www.youtube.com)",
+        "/feed/home": "retrieve your own Youtube homepage results (https://www.youtube.com)",
       },
       {
-        "/feed/channel":
-          "Retrieve results from a youtube channel (https://www.youtube.com/c/VEVO)",
+        "/feed/channel": "Retrieve results from a youtube channel (https://www.youtube.com/c/VEVO)",
       },
     ],
   });
