@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 
-const browserOptions = { args: ["--no-sandbox"], headless: false };
+const browserOptions = { args: ["--no-sandbox"], headless: process.env.HEADLESS === "true" };
 let width = 1200;
 let height = 1000;
 let iterationNum = 10;

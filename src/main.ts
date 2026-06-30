@@ -195,7 +195,7 @@ class YoutubeScrape {
     //——Making screenshot of each file
 
     //make a photo based on the iteraction count
-    this.storeScreenshot({ page, fileName: "feed-subs" });
+    await this.storeScreenshot({ page, fileName: "feed-subs" });
 
     //$$ works exactly as a document.querySelectorAll() would in the browser console
     let videoArray = await page.$$("#contents #content");
@@ -293,7 +293,7 @@ class YoutubeScrape {
     //——Making screenshot of each file
 
     //make a photo based on the iteraction count
-    this.storeScreenshot({ page, fileName: "feed-home" });
+    await this.storeScreenshot({ page, fileName: "feed-home" });
 
     //$$ works exactly as a document.querySelectorAll() would in the browser console
     let videoArray = await page.$$("#contents .ytd-rich-grid-renderer");
@@ -323,9 +323,16 @@ class YoutubeScrape {
         video.channel_url = `${youtube_url}${video.channel_url}`;
         //video.channel_icon = await videoElement.$eval('a[class="yt-simple-endpoint style-scope ytd-rich-grid-video-renderer"] img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
         //video.thumbnail = await videoElement.$eval('img[class="style-scope yt-img-shadow"]', element => element.getAttribute('src'));
-        video.thumbnail = await videoElement.$eval('img[src*="i.ytimg.com"]', (element) =>
-          element.getAttribute("src")
-        );
+        try {
+          video.thumbnail = await videoElement.$eval('img[src*="i.ytimg.com"]', (element) =>
+            element.getAttribute("src")
+          );
+        } catch (error) {
+          video.thumbnail = `https://img.youtube.com/vi/${video.url.split("?v=").pop()}/hqdefault.jpg`;
+        }
+
+        console.log(chalk.cyan(`Listed video[${iteration}]: ${video.title}`));
+
         video.view_num = await videoElement.$eval(
           "yt-content-metadata-view-model span",
           (element) => (element as HTMLParagraphElement).innerText
@@ -416,9 +423,14 @@ class YoutubeScrape {
           ".ytPageHeaderViewModelContent .ytSpecAvatarShapeAvatarSizeGiant [src]",
           (element) => element.getAttribute("src")
         );
-        video.thumbnail = await videoElement.$eval("yt-thumbnail-view-model img", (element) =>
-          element.getAttribute("src")
-        );
+        try {
+          video.thumbnail = await videoElement.$eval("yt-thumbnail-view-model img", (element) =>
+            element.getAttribute("src")
+          );
+        } catch (_) {}
+        if (!video.thumbnail) {
+          video.thumbnail = `https://img.youtube.com/vi/${video.url.split("?v=").pop()}/hqdefault.jpg`;
+        }
         video.view_num = await videoElement.$eval(
           "yt-content-metadata-view-model span",
           (element) => (element as HTMLParagraphElement).innerText
@@ -439,7 +451,7 @@ class YoutubeScrape {
         continue;
       }
 
-      console.log(chalk.cyan(`Listed video: ${video.title}`));
+      console.log(chalk.cyan(`Listed video[${iteration}]: ${video.title}`));
 
       //Decides how many time it loops through, definetely a better way to write this.
       iteration++;

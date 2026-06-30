@@ -1,0 +1,56 @@
+name: YouTube Scrape
+
+on:
+  schedule:
+    - cron: "0 */3 * * *" # a cada 3 horas
+  workflow_dispatch:
+    inputs:
+      feeds:
+        description: "Feeds para scraping (subscriptions,home,channel)"
+        required: false
+        default: "subscriptions,home"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Firefox
+        run: npx playwright install firefox --with-deps
+
+      - name: Run scraper
+        env:
+          HEADLESS: "true"
+          # Google auth (usado no primeiro login via user-pass; cron usa stored)
+          G_USER: ${{ secrets.YT_USER }}
+          G_PASS: ${{ secrets.YT_PASS }}
+          # USER é usado para nomear arquivos no storage local/imgur
+          USER: ${{ secrets.YT_USER }}
+          TIMEOUT_SHORT: 500
+          TIMEOUT_LONG: 2500
+          # Feeds: workflow_dispatch usa o input; cron usa o default
+          FEEDS: ${{ inputs.feeds || 'subscriptions' }}
+          ITERATION_NUM: 50
+          # Storage
+          STORE_IMG: imgur
+          STORE_JSON: jsonbin
+          IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+          JSONBIN_API_KEY: ${{ secrets.JSONBIN_API_KEY }}
+          JSONBIN_ID_STATE: ${{ secrets.JSONBIN_ID_STATE }}
+          JSONBIN_ID_SUBS: ${{ secrets.JSONBIN_ID_SUBS }}
+          JSONBIN_ID_HOME: ${{ secrets.JSONBIN_ID_HOME }}
+          JSONBIN_ID_CHANNEL: ${{ secrets.JSONBIN_ID_CHANNEL }}
+          # Necessário apenas se FEEDS incluir 'channel'
+          CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
+        run: npm run task

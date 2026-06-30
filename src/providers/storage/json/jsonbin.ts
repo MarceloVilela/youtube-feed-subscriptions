@@ -45,10 +45,13 @@ const storeJson = async ({ data, fileName }: StoreJsonParams) => {
     await jsonbin.put(id, data);
 
     console.log(chalk.green(`💾 The file (${fileName}|${id}) has been saved!`));
-  } catch (error) {
+  } catch (error: any) {
     console.log(chalk.red(`💾 Error on save file (${fileName}|${id})!`));
-    // @ts-ignore
     console.log(error.message);
+    if (error.response) {
+      console.log("status:", error.response.status);
+      console.log("body:", JSON.stringify(error.response.data, null, 2));
+    }
   }
 };
 
@@ -59,9 +62,7 @@ const loadJson = async ({ fileName }: LoadJsonParams) => {
     const { data } = await jsonbin.get(id);
     const { record } = data;
 
-    console.log(
-      chalk.green(`💾 The file (${fileName}|${id}) has been loaded!`),
-    );
+    console.log(chalk.green(`💾 The file (${fileName}|${id}) has been loaded!`));
 
     return record;
   } catch (error) {
