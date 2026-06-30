@@ -1,4 +1,4 @@
-import { firefox, Page, LaunchOptions, PageScreenshotOptions, Browser } from "playwright-firefox";
+import { firefox, Page, LaunchOptions, PageScreenshotOptions, Browser } from "playwright";
 import chalk from "chalk";
 // @ts-ignore
 import dotenv from "dotenv";

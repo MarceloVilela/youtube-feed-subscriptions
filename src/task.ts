@@ -11,7 +11,7 @@ const WIDTH = Number(process.env.VIEWPORT_WIDTH) || 1920;
 const HEIGHT = Number(process.env.VIEWPORT_HEIGHT) || 1080;
 const ITERATION_NUM = Number(process.env.ITERATION_NUM) || 50;
 const CHANNEL_URL = process.env.CHANNEL_URL;
-const browserOptions = { args: ["--no-sandbox"], headless: process.env.HEADLESS === "true" };
+const browserOptions = { headless: process.env.HEADLESS === "true" };
 
 // FEEDS=subscriptions,home,channel  (default: subscriptions,home)
 const FEEDS = (process.env.FEEDS || "subscriptions,home")
