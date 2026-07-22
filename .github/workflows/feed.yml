@@ -1,8 +1,8 @@
-name: YouTube Scrape
+name: YouTube Feed
 
 on:
   schedule:
-    - cron: "0 */3 * * *" # a cada 3 horas
+    - cron: "0 */12 * * *" # a cada 12 horas
   workflow_dispatch:
     inputs:
       feeds:
@@ -54,3 +54,6 @@ jobs:
           # Necessário apenas se FEEDS incluir 'channel'
           CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
         run: npm run task
+
+# marcelo.vilela.s@gmail.com
+# https://github.com/MarceloVilela/youtube-feed-subscriptions/settings/notifications
