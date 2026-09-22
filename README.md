@@ -7,7 +7,7 @@ API REST para scraping do feed de inscrições e home do YouTube utilizando Play
 - **GET `/feed/subscriptions`** — Scrape do feed de inscrições (`youtube.com/feed/subscriptions`)
 - **GET `/feed/home`** — Scrape da página inicial do YouTube (`youtube.com`)
 - **GET `/feed/channel?url=<url>`** — Scrape dos vídeos de um canal específico
-- **GET `/page/screenshot?url=<url>&y=<posicoes>`** — Screenshot de páginas em posições Y específicas
+- **GET `/page/screenshot?url=<url>&y=<posicoes>`** — Screenshot de qualquer página em uma ou mais posições de scroll (ver seção [Screenshots](#screenshots))
 - **GET `/doc`** — Documentação Swagger UI
 - **GET `/`** — Informações da API e rotas disponíveis
 
@@ -86,6 +86,23 @@ Todas as rotas de scraping aceitam:
 | `width` | number (768–3840) | `1200` | Largura do viewport |
 | `height` | number (768–3840) | `1000` | Altura do viewport |
 | `iteration` | number (10–100) | `10` | Máx. de vídeos a extrair |
+
+## Screenshots
+
+A rota `GET /page/screenshot` abre a URL informada em um browser Firefox headless (viewport `1152x950`, tema escuro), rola até cada posição Y informada e captura uma screenshot em cada uma — útil para gerar imagens de páginas longas em múltiplos pontos sem precisar automatizar o scroll manualmente.
+
+| Parâmetro | Tipo | Descrição |
+|---|---|---|
+| `url` | string | URL da página a capturar |
+| `y` | number[] (separados por vírgula) | Posições de scroll vertical (em pixels) onde cada screenshot é tirada |
+
+Exemplo:
+
+```
+GET /page/screenshot?url=https://exemplo.com&y=0,800,1600
+```
+
+Retorna um array com uma entrada por posição `y`, na mesma ordem em que foram informadas. Cada screenshot é persistida pelo backend de imagem configurado em `STORE_IMG` (`imgur`, `local` ou `debug` — ver [Principais variáveis de ambiente](#principais-variáveis-de-ambiente)); com `imgur`, a resposta traz a URL pública da imagem enviada.
 
 ## Estrutura do Projeto
 
