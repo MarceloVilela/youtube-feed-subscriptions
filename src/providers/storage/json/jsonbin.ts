@@ -17,6 +17,9 @@ const getId = (fileName = "") => {
     case "feed-channel":
       id = String(process.env.JSONBIN_ID_CHANNEL);
       break;
+    case "screenshots":
+      id = String(process.env.JSONBIN_ID_SCREENSHOT);
+      break;
     default:
       id = "";
       break;

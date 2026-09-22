@@ -1,0 +1,39 @@
+name: Screenshot
+
+on:
+  schedule:
+    - cron: "0 */6 * * *" # a cada 6 horas
+  workflow_dispatch:
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Firefox
+        run: npx playwright install firefox --with-deps
+
+      - name: Generate screenshots
+        env:
+          HEADLESS: "true"
+          # Storage
+          STORE_IMG: imgur
+          STORE_JSON: jsonbin
+          IMGUR_CLIENT_ID: ${{ secrets.IMGUR_CLIENT_ID }}
+          JSONBIN_API_KEY: ${{ secrets.JSONBIN_API_KEY }}
+          JSONBIN_ID_SCREENSHOT: ${{ secrets.JSONBIN_ID_SCREENSHOT }}
+        run: npm run screenshot
+
+# marcelo.vilela.s@gmail.com
+# https://github.com/MarceloVilela/youtube-feed-subscriptions/settings/notifications

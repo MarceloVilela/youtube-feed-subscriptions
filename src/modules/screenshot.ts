@@ -1,4 +1,4 @@
-import { firefox, Page } from "playwright-firefox";
+import { firefox, Page } from "playwright";
 import {
   storeImageImgur,
   storeImageLocal,
