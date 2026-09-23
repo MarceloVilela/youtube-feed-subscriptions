@@ -1,18 +1,15 @@
 name: Screenshot
 
 on:
-  workflow_run:
-    workflows: ["YouTube Feed"] # dispara após feed.yml terminar
-    types:
-      - completed
+  # disparado via API (POST /v1/screenshot/refresh no devfinder-api) ao fim de
+  # video-refresh.yml, depois que o banco reflete os vídeos novos do feed — não
+  # direto após feed.yml, que só gera o JSON bruto. Também aceita disparo manual.
   workflow_dispatch:
 
 jobs:
   screenshot:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
-    # roda em dispatch manual, ou só após feed.yml terminar com sucesso
-    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
 
     steps:
       - uses: actions/checkout@v5

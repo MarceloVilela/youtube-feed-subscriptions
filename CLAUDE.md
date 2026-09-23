@@ -54,6 +54,10 @@ Dois conjuntos paralelos de backends intercambiáveis, selecionados por chamada 
 ### Build
 O TypeScript (`tsconfig.json`, `strict: true`) é usado, na prática, só para checagem de tipos no editor — tanto o build (`npm run build`, Babel) quanto o servidor de desenvolvimento (`ts-node-dev --transpile-only`) removem os tipos sem checá-los. Um erro de tipo não vai falhar o build nem o dev server.
 
+## Fluxo de trabalho com git
+
+Só fazer `git commit`, `git push` ou abrir/editar Pull Request quando o usuário pedir explicitamente. Uma autorização vale apenas para o que foi pedido naquele momento — não presumir autorização para ações futuras nem estender o pedido a outros arquivos/mudanças não mencionados.
+
 ## Inconsistências conhecidas
 
 - `.env.development.example` / `.env.staging.example` definem `SHORT_TIMEOUT`/`LONG_TIMEOUT`, mas `src/main.ts` lê `process.env.TIMEOUT_SHORT`/`TIMEOUT_LONG` (palavras invertidas) — copiar os arquivos de exemplo como estão gera `NaN` nos timeouts silenciosamente.
