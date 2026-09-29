@@ -14,6 +14,10 @@ jobs:
   scrape:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
+    env:
+      # Exposto no nível do job só para poder ser testado em `if:` (secrets não
+      # são acessíveis diretamente em condicionais).
+      GH_TOKEN: ${{ secrets.DEVFINDER_DISPATCH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v5
@@ -54,6 +58,13 @@ jobs:
           # Necessário apenas se FEEDS incluir 'channel'
           CHANNEL_URL: ${{ secrets.CHANNEL_URL }}
         run: npm run task
+
+      # Só roda se o scrape terminou com sucesso, ou seja, o JSON já foi gravado
+      # no JSONbin, e se o secret existir. Usa PAT porque o GITHUB_TOKEN não
+      # dispara workflows em outro repo.
+      - name: Dispatch Video Refresh (devfinder-api)
+        if: success() && env.GH_TOKEN != ''
+        run: gh workflow run video-refresh.yml -R MarceloVilela/devfinder-api --ref master
 
 # marcelo.vilela.s@gmail.com
 # https://github.com/MarceloVilela/youtube-feed-subscriptions/settings/notifications

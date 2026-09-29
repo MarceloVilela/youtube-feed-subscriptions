@@ -120,6 +120,14 @@ Retorna um array com uma entrada por posição `y`, na mesma ordem em que foram 
 └── swagger_output.json      # Especificação OpenAPI
 ```
 
+## GitHub Actions
+
+| Workflow | Repositório | Gatilho |
+|---|---|---|
+| `feed.yml` | youtube-feed-subscriptions | cron `0 */12 * * *` ou manual; ao fim, dispara `video-refresh.yml` (requer o secret `DEVFINDER_DISPATCH_TOKEN`) |
+| `video-refresh.yml` | devfinder-api | disparado pelo `feed.yml` (cron `0 */12 * * *` como fallback) ou manual |
+| `screenshot.yml` | youtube-feed-subscriptions | disparado via API pelo devfinder-api ao fim do refresh, ou manual |
+
 ## Licença
 
 ISC
